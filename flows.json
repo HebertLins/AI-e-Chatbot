@@ -1,0 +1,246 @@
+[
+    {
+        "id": "ea991184b9fa7cd4",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "9ec830c9b7def654",
+        "type": "telegram receiver",
+        "z": "ea991184b9fa7cd4",
+        "name": "",
+        "bot": "85a017f8e75b8509",
+        "saveDataDir": "",
+        "filterCommands": false,
+        "x": 110,
+        "y": 140,
+        "wires": [
+            [
+                "13fe946adb5d66cc",
+                "072f0bd8bc5e73d7"
+            ],
+            [
+                "e71bb6d65f2d5774"
+            ]
+        ]
+    },
+    {
+        "id": "13fe946adb5d66cc",
+        "type": "debug",
+        "z": "ea991184b9fa7cd4",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 330,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "00caa89fd75b1599",
+        "type": "telegram sender",
+        "z": "ea991184b9fa7cd4",
+        "name": "",
+        "bot": "85a017f8e75b8509",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 950,
+        "y": 280,
+        "wires": [
+            [
+                "87ebf12a8a20b8cc"
+            ]
+        ]
+    },
+    {
+        "id": "ec080da385f946f0",
+        "type": "watson-assistant-v2",
+        "z": "ea991184b9fa7cd4",
+        "name": "Tia Luci",
+        "service-endpoint": "",
+        "assistant_id": "e035cfc7-7ebf-46f5-8575-37fb954905ef",
+        "debug": false,
+        "restart": false,
+        "return_context": true,
+        "alternate_intents": false,
+        "multisession": true,
+        "timeout": "",
+        "optout-learning": false,
+        "persist-session-id": false,
+        "x": 560,
+        "y": 180,
+        "wires": [
+            [
+                "2031ac47a3ac5702",
+                "9b099c5f479a8140"
+            ]
+        ]
+    },
+    {
+        "id": "2031ac47a3ac5702",
+        "type": "debug",
+        "z": "ea991184b9fa7cd4",
+        "name": "Resposta para o Telegram",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "072f0bd8bc5e73d7",
+        "type": "change",
+        "z": "ea991184b9fa7cd4",
+        "name": "Prepara entrada",
+        "rules": [
+            {
+                "t": "set",
+                "p": "params.session_id",
+                "pt": "msg",
+                "to": "payload.chatId",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "chatId",
+                "pt": "msg",
+                "to": "payload.chatId",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.content",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 360,
+        "y": 240,
+        "wires": [
+            [
+                "ec080da385f946f0"
+            ]
+        ]
+    },
+    {
+        "id": "87ebf12a8a20b8cc",
+        "type": "debug",
+        "z": "ea991184b9fa7cd4",
+        "name": "Retorno",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "9b099c5f479a8140",
+        "type": "change",
+        "z": "ea991184b9fa7cd4",
+        "name": "Prepara retorno",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload.chatId",
+                "pt": "msg",
+                "to": "chatId",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.type",
+                "pt": "msg",
+                "to": "message",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.content",
+                "pt": "msg",
+                "to": "payload.output.generic[0].text",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 740,
+        "y": 240,
+        "wires": [
+            [
+                "00caa89fd75b1599"
+            ]
+        ]
+    },
+    {
+        "id": "e71bb6d65f2d5774",
+        "type": "function",
+        "z": "ea991184b9fa7cd4",
+        "name": "Acesso não autorizado",
+        "func": "msg.payload.content = \"Você não é um usuário autorizado!\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 360,
+        "wires": [
+            [
+                "00caa89fd75b1599"
+            ]
+        ]
+    },
+    {
+        "id": "85a017f8e75b8509",
+        "type": "telegram bot",
+        "botname": "@H_Fiap_bot",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "updatemode": "polling",
+        "pollinterval": "300",
+        "usesocks": false,
+        "sockshost": "",
+        "socksprotocol": "socks5",
+        "socksport": "6667",
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbotport": "8443",
+        "publicbotport": "8443",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    }
+]
